@@ -9,8 +9,13 @@ app.use(cors())
 app.use(express.json())
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Server is running!");
+app.get("/users", (req, res) => {
+  const users = [
+    { id: 1, name: "JM" },
+    { id: 2, name: "Cabrera" },
+  ];
+  
+  res.json(users);
 });
 
 
