@@ -63,9 +63,13 @@ export const loginUser = async (req, res) => {
     const data = await response.json()
     if (data.error) return res.status(401).json({error: data.error.message})
 
+    const userDoc = await db.collection("users").doc(data.localId).get();
+    const userData = userDoc.data();
+
     res.json({
       message: "Login succesfully",
-      token: data.idToken
+      token: data.idToken,
+      role: userData.role
     })
   } catch (error) {
     console.log(error)
