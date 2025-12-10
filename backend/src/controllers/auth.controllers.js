@@ -71,6 +71,7 @@ export const loginUser = async (req, res) => {
       token: data.idToken,
       role: userData.role
     })
+    
   } catch (error) {
     console.log(error)
 
