@@ -6,7 +6,7 @@ export const registerUser = async (req, res) => {
     const { name, email, password, timezone } = req.body;
 
     // for backend testing comment it if there is a connected frontend
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     // 2️⃣ Create Firebase Auth user
     const userRecord = await auth.createUser({
@@ -21,7 +21,7 @@ export const registerUser = async (req, res) => {
       name,
       email,
       role: "employee",
-      timezone: userTimezone,
+      timezone,
       schedule: {
         start: "9:00",
         end: "18:00"
