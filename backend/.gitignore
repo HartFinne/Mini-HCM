@@ -118,7 +118,7 @@ dist
 .pnp.*
 
 
-backend/src/config/serviceAccount.json
+src/config/serviceAccount.json
 
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
