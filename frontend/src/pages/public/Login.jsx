@@ -1,5 +1,48 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
+import { useState } from "react"
+import { AuthContext } from "../../context/AuthContext"
+import { useContext } from "react"
+
+
+
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+
+  const {login} = useContext(AuthContext)
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+
+    const url = "http://localhost:5000/api/auth/login"
+    try {
+      const res = await axios.post(url, {
+        email,
+        password
+      })
+
+      // Save token + role in context
+      login(res.data.token, res.data.role);
+      localStorage.setItem("token", res.data.token)
+      localStorage.setItem("role", res.data.role)
+
+      alert("Login successful!");
+      // Redirect based on role
+      if (res.data.role === "admin") {
+        navigate("/admin-home");
+      } else {
+        navigate("/home");
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.error || "Login failed");
+    }
+  }
+
+
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -14,7 +57,7 @@ const Login = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
                 Email address
@@ -24,6 +67,8 @@ const Login = () => {
                   id="email"
                   name="email"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -47,6 +92,8 @@ const Login = () => {
                   id="password"
                   name="password"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -66,9 +113,9 @@ const Login = () => {
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Dont have a account?{' '}
-            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-              <Link to="/register">Register</Link>
-            </a>
+            <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
+              Register
+            </Link>
           </p>
         </div>
       </div>
