@@ -61,7 +61,7 @@ const Home = () => {
           </div>
 
           {/* Time Display */}
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-8 mb-8">
+          <div className="bg-linear-to-r from-blue-50 to-blue-100 rounded-lg p-8 mb-8">
             <div className="text-center">
               <p className="text-gray-600 text-sm mb-2">Current Time</p>
               <p className="text-5xl font-bold text-blue-600">{formatTime(currentTime)}</p>
