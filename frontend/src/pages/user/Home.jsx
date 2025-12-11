@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { punchIn as apiPunchIn, punchOut as apiPunchOut } from '../../api/attendanceAPI';
 
 const Home = () => {
+  const { token } = useContext(AuthContext); 
   const [punchTime, setPunchTime] = useState(null);
   const [isPunchedIn, setIsPunchedIn] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -13,15 +16,32 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handlePunchIn = () => {
-    const now = new Date();
-    setPunchTime(now);
-    setIsPunchedIn(true);
+  const handlePunchIn = async () => {
+    if (!token) return alert("You are not logged in");
+
+    try {
+      const res = await apiPunchIn(token); // pass token to API
+      console.log(res.data);
+      setPunchTime(new Date());
+      setIsPunchedIn(true);
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert(err.response?.data?.message || "Punch in failed");
+    }
   };
 
-  const handlePunchOut = () => {
-    setIsPunchedIn(false);
-    setPunchTime(null);
+  const handlePunchOut = async () => {
+    if (!token) return alert("You are not logged in");
+
+    try {
+      const res = await apiPunchOut(token); // pass token to API
+      console.log(res.data);
+      setIsPunchedIn(false);
+      setPunchTime(null);
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert(err.response?.data?.message || "Punch out failed");
+    }
   };
 
   const formatTime = (date) => {
