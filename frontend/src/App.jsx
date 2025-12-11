@@ -9,7 +9,6 @@ import Register from "./pages/public/Register"
 import UserRoute from "./components/UserRoute"
 import Navbar from './components/Navbar'
 import Home from "./pages/user/Home"
-import Report from './pages/user/Report'
 
 
 function App() {
@@ -36,13 +35,6 @@ function App() {
           </UserRoute>}>
         </Route>
 
-        <Route path='/report' element={
-          <UserRoute>
-            <Navbar/>
-            <Report/>
-          </UserRoute>
-        }>
-        </Route>
         
       </Routes>
     </>
