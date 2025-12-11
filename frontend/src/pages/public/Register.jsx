@@ -1,6 +1,7 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import axios from "axios"
+import { useState, useContext } from "react"
+import { Link, useNavigate  } from "react-router-dom"
+import { registerUser } from "../../api/authAPI"
+import { AuthContext } from "../../context/AuthContext"
 
 
 const Register = () => {
@@ -8,6 +9,9 @@ const Register = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
+
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleRegister = async (e) => {
     e.preventDefault()
@@ -17,15 +21,15 @@ const Register = () => {
       return
     }
 
-    console.log(name, email)
-
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
-        name,
-        email,
-        password,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      })
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+      const data = await registerUser({ name, email, password, timezone });
+
+      // If your backend returns token & role on register, save it
+      if (data.token && data.role) {
+        login(data.token, data.role);
+      }
 
       setName('')
       setEmail('')
@@ -33,8 +37,7 @@ const Register = () => {
       setRePassword('')
 
       alert("Registered Succesfully")
-
-
+      navigate("/");
     } catch (error) {
 
       alert(error.response?.data?.error || "Registraion Failed")

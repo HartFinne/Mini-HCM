@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom"
-import axios from "axios"
 import { useState } from "react"
 import { AuthContext } from "../../context/AuthContext"
 import { useContext } from "react"
+import { loginUser } from "../../api/authAPI"
 
 
 
@@ -16,21 +16,17 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
 
-    const url = "http://localhost:5000/api/auth/login"
     try {
-      const res = await axios.post(url, {
-        email,
-        password
-      })
-
+      // api for logging in
+      const data = await loginUser(email, password)
       // Save token + role in context
-      login(res.data.token, res.data.role);
-      localStorage.setItem("token", res.data.token)
-      localStorage.setItem("role", res.data.role)
+      login(data.token, data.role);
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("role", data.role)
 
       alert("Login successful!");
       // Redirect based on role
-      if (res.data.role === "admin") {
+      if (data.role === "admin") {
         navigate("/admin-home");
       } else {
         navigate("/home");
