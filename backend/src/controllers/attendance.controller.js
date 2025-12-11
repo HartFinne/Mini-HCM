@@ -6,6 +6,7 @@ export const punchIn = async (req, res) => {
     const uid = req.user.uid;
     const timezone = req.user.timezone || "Asia/Manila";
     const today = getTodayDate(timezone); // e.g., "2025-12-11"
+    // const today = "2025-12-12";
     const now = admin.firestore.Timestamp.now();
 
     const docRef = db
@@ -24,12 +25,6 @@ export const punchIn = async (req, res) => {
       {
         punchIn: now,
         status: "missing-out",
-        punches: [
-          {
-            type: "IN",
-            timeStamps: now, // use "timeStamps" to match your schema
-          },
-        ],
       },
       { merge: true }
     );
@@ -67,10 +62,6 @@ export const punchOut = async (req, res) => {
       {
         punchOut: now,
         status: "completed",
-        punches: admin.firestore.FieldValue.arrayUnion({
-          type: "OUT",
-          timeStamps: now,
-        }),
       },
       { merge: true }
     );
@@ -78,5 +69,45 @@ export const punchOut = async (req, res) => {
     res.send({ message: "Punch out recorded." });
   } catch (error) {
     res.status(500).send({ error: error.message });
+  }
+};
+
+
+export const getTodayAttendance = async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const today = getTodayDate(req.user.timezone || "Asia/Manila");
+    const docRef = db
+      .collection("attendance")
+      .doc(uid)
+      .collection("records")
+      .doc(today);
+
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      return res.send({
+        punchIn: null,
+        punchOut: null,
+        punches: [],
+        status: null
+      });
+    }
+
+    const data = doc.data();
+
+    res.send({
+      punchIn: data.punchIn ? data.punchIn.toDate() : null,
+      punchOut: data.punchOut ? data.punchOut.toDate() : null,
+      punches: data.punches
+        ? data.punches.map((p) => ({
+            type: p.type,
+            timeStamps: p.timeStamps.toDate()
+          }))
+        : [],
+      status: data.status || null
+    });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
   }
 };

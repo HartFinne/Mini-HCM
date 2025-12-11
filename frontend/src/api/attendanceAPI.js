@@ -25,3 +25,13 @@ export const punchOut = async (token) => {
     }
   );
 };
+
+
+// Get Today's Attendance
+export const getTodayAttendance = async (token) => {
+  return axios.get(`${API_BASE}/attendance/today-attendance`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
