@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // locally test
-// const API_BASE = 'http://localhost:5000/api'
+// const API_BASE = 'http://localhost:5000/api/auth'
 
 // production
 const API_BASE = 'https://mini-hcm-tau.vercel.app/api/auth'

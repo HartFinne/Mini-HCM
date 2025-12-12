@@ -1,9 +1,13 @@
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useContext(AuthContext); // ✅ get logout from context
+
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -22,8 +26,8 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8">
-            <Link 
-              to="/home" 
+            <Link
+              to="/home"
               className="text-gray-700 hover:text-blue-600 transition-colors duration-200"
             >
               Home
@@ -32,8 +36,9 @@ const Navbar = () => {
 
           {/* Logout Button */}
           <div className="hidden md:flex">
-            <button 
+            <button
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200"
+              onClick={logout}
             >
               Logout
             </button>
@@ -68,16 +73,16 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden pb-4 border-t border-gray-200">
-            <Link 
-              to="/home" 
+            <Link
+              to="/home"
               className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md"
               onClick={() => setIsOpen(false)}
             >
               Home
             </Link>
-            <button 
+            <button
               className="block w-full text-left px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-md border-t border-gray-200 mt-2 pt-2"
-              onClick={() => setIsOpen(false)}
+              onClick={logout}
             >
               Logout
             </button>
