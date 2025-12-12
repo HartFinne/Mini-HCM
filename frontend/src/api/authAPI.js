@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const API_BASE = 'http://localhost:5000/api'
+// locally test
+// const API_BASE = 'http://localhost:5000/api'
+
+// production
+const API_BASE = 'https://mini-hcm-tau.vercel.app/'
 
 export const loginUser = async (email, password) => {
   const res = await axios.post(`${API_BASE}/auth/login`, { email, password });
